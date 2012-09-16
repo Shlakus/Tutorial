@@ -1,3 +1,49 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+	<head>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.js"></script>
+		<script>
+		function doWork(a) {
+			var value = getElementValue("battle_net");
+			// "http://eu.battle.net/api/d3/profile/k0st1x-2494/"
+			var url = "http://eu.battle.net/api/d3/profile/" + value + "/";
+			
+			$.ajax({
+				url: url,
+				dataType: "jsonp",
+				error: function(data) {
+					alert("ошибка: " + data.statusText);
+				},
+				success: function(data) {
+					if (data.code === "OOPS"){
+						alert('ошибка ' + data.reason);
+						return;
+					}
+					//alert("у тебя " + data.heroes.length + " героя");
+					var info =	document.getElementById('info');
+					var text = "у тебя ";
+					//for i=0 to (data.heroes.length-1) { /*pas*/
+					//for(var i = 0; i < data.heroes.legth; i++) { /*js*/
+					for(var i in data.heroes) { /*js*/
+						var hero = data.heroes[i];
+						var heroClass = hero.class;
+						text += hero.name + '(' + heroClass + '), ';
+					}
+					info.innerHTML = text;
+				},
+			});
+		}
+		function getElementValue(name) {
+			var element = document.getElementById(name);
+			return element.value;
+		}
+		</script>
+	</head>
+
+	<body>
+		<input id="battle_net" value="battle.net-tag"/>
+		<button id='button_for_work' onclick="doWork(42);">click me</button>
+		<br/>
+		<span id="info">здесь будет информация</span>
+	</body>
 </html>
